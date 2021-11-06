@@ -24,6 +24,10 @@ class GameBoard(private val width: Int, private val height: Int) {
     }
 
     private val ships: MutableSet<Ship> = mutableSetOf()
+    val allShips: List<Ship>
+        get() {
+            return ships.toList()
+        }
 
     fun convertCoordinates(coordinates: String): Pair<Int, Int> {
         val cleanedCoordinates = coordinates.replace(Regex("[^a-zA-Z0-9]"), "").uppercase(Locale.getDefault())
@@ -66,7 +70,7 @@ class GameBoard(private val width: Int, private val height: Int) {
         var x = xy.first
         var y = xy.second
         repeat(ship.length) {
-            cells[x][y].ship?.let{
+            cells[x][y].ship?.let {
                 return false
             }
 

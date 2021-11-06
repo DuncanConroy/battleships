@@ -7,5 +7,7 @@ import org.springframework.boot.runApplication
 class BattleshipsApplication
 
 fun main(args: Array<String>) {
+    TODO("mehr todos aufschreiben ^^")
+
     runApplication<BattleshipsApplication>(*args)
 }

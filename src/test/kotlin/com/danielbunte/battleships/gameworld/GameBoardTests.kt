@@ -110,4 +110,40 @@ class GameBoardTests {
         // then: failure
         assertEquals(false, result)
     }
+
+    @Test
+    fun `placement outside grid results in failure`(){
+        // given: a GameBoard
+        val classUnderTest = GameBoard(10,10)
+
+        // when: a ship is placed completely outside the grid
+        val result = classUnderTest.placeShip("K11", Ship("",1), true)
+
+        // then: failure
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `placement partially outside grid results in failure`(){
+        // given: a GameBoard
+        val classUnderTest = GameBoard(10,10)
+
+        // when: a ship is placed partially vertically  outside the grid
+        val resultV = classUnderTest.placeShip("A9", Ship("",5), false)
+
+        // then: failure
+        assertEquals(false, resultV)
+
+        // and when: a ship is placed partially horizontally outside the grid
+        val resultH = classUnderTest.placeShip("H1", Ship("",5), true)
+
+        // then: failure
+        assertEquals(false, resultH)
+
+        // and when: a ship is placed partially horizontally outside the grid row 0
+        val result0 = classUnderTest.placeShip("H0", Ship("",5), true)
+
+        // then: failure
+        assertEquals(false, result0)
+    }
 }

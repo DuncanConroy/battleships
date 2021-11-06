@@ -2,7 +2,6 @@ package com.danielbunte.battleships.match
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class TurnCoordinatorTests {
 
@@ -14,8 +13,8 @@ class TurnCoordinatorTests {
         val classUnderTest = TurnCoordinator(listOf(playerA,playerB))
 
         // when: playerA tries to make consecutive turns
-        classUnderTest.makeTurn(playerA, "A1")
-        val result = classUnderTest.makeTurn(playerA, "A2")
+        classUnderTest.canMakeTurn(playerA)
+        val result = classUnderTest.canMakeTurn(playerA)
 
         // then: NOT_YOUR_TURN is returned
         assertEquals(TurnResult.NOT_YOUR_TURN, result.first)
@@ -32,8 +31,8 @@ class TurnCoordinatorTests {
         val classUnderTest = TurnCoordinator(listOf(playerA,playerB))
 
         // when: playerA tries to make consecutive turns
-        classUnderTest.makeTurn(playerA, "A1")
-        val result = classUnderTest.makeTurn(playerB, "A1")
+        classUnderTest.canMakeTurn(playerA)
+        val result = classUnderTest.canMakeTurn(playerB)
 
         // then: next player is playerA
         assertEquals(playerA, result.second)

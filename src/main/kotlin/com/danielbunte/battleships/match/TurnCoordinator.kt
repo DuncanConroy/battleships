@@ -4,7 +4,7 @@ class TurnCoordinator(private val players: List<Player>) {
 
     private var currentPlayer: Int = 0
 
-    fun makeTurn(player: Player, coordinates: String): Pair<TurnResult, Player> {
+    fun canMakeTurn(player: Player): Pair<TurnResult, Player> {
         if (players[currentPlayer] !== player) {
             return TurnResult.NOT_YOUR_TURN to players[currentPlayer]
         }

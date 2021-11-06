@@ -26,6 +26,7 @@ class Match(private val hitCalculator: HitCalculator, private val turnCoordinato
         }
 
         val hitResult = hitCalculator.attemptAttack(targetPlayer.gameBoard, coordinates)
+        // TODO: update gameBoard with hitResult
         if (hitResult == HitResult.DESTROYED && calculateActiveShips(targetPlayer) == 0) {
             return GameResult.WON to attackingPlayer
         }

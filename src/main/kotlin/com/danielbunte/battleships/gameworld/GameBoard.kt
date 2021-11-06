@@ -54,6 +54,7 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     private fun updateCells(xy: Pair<Int, Int>, ship: Ship, horizontal: Boolean) {
+        TODO("mehr todos aufschreiben ^^")
         var x = xy.first
         var y = xy.second
         repeat(ship.length) {
@@ -67,6 +68,7 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     private fun canPlace(xy: Pair<Int, Int>, ship: Ship, horizontal: Boolean): Boolean {
+        TODO("out of bounds check")
         var x = xy.first
         var y = xy.second
         repeat(ship.length) {
@@ -92,4 +94,4 @@ class GameBoard(val width: Int, val height: Int) {
     fun copy() = GameBoard(width, height)
 }
 
-data class Cell(val ship: Ship?)
+data class Cell(val ship: Ship?) //TODO: state -> empty, MISS, hit, destroyed

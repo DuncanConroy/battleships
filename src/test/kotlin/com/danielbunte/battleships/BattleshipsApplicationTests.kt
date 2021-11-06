@@ -10,4 +10,6 @@ class BattleshipsApplicationTests {
     fun contextLoads() {
     }
 
+    // TODO: create a fully featured test
+
 }

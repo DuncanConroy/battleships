@@ -1,6 +1,6 @@
 package com.danielbunte.battleships.match
 
-class Match(val hitCalculator: HitCalculator) {
+class Match(private val hitCalculator: HitCalculator, private val turnCalculator: TurnCoordinator) {
 
     private val maxPlayers = 2
     private val players: MutableList<Player> = mutableListOf()
@@ -13,6 +13,10 @@ class Match(val hitCalculator: HitCalculator) {
     }
 
     fun attemptAttack(attackingPlayer: Player, targetPlayer: Player, coordinates: String): Pair<GameResult, Player?> {
+        if (turnCalculator.canMakeTurn(attackingPlayer).first == TurnResult.NOT_YOUR_TURN) {
+            return GameResult.NOT_YOUR_TURN to null
+        }
+
         val hitResult = hitCalculator.attemptAttack(targetPlayer.gameBoard, coordinates)
         if (hitResult == HitResult.DESTROYED && calculateActiveShips(targetPlayer) == 0) {
             return GameResult.WON to attackingPlayer

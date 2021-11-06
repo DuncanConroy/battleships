@@ -13,7 +13,7 @@ class TurnCoordinator(private val players: List<Player>) {
             currentPlayer = 0
         }
 
-        return TurnResult.NOT_YOUR_TURN to players[currentPlayer]
+        return TurnResult.PROCEED to players[currentPlayer]
     }
 
 }

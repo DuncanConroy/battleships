@@ -36,5 +36,8 @@ class TurnCoordinatorTests {
 
         // then: next player is playerA
         assertEquals(playerA, result.second)
+
+        // and: PROCEED is returned
+        assertEquals(TurnResult.PROCEED, result.first)
     }
 }

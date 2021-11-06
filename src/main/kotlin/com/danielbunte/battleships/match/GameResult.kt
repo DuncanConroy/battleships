@@ -2,5 +2,6 @@ package com.danielbunte.battleships.match
 
 enum class GameResult {
     WON,
-    ONGOING
+    ONGOING,
+    NOT_YOUR_TURN
 }

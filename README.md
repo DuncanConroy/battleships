@@ -44,3 +44,17 @@ ship?.let { // same logic as with "if ship != null"
   // do something useful
 }
 ```
+
+###Structures
+The code makes some use of Pairs/Tuples. In Kotlin, it's very easy to create Pairs:
+```
+val foo = 0 to "Zero" // -> same as val foo = Pair<Int, String>(0, "Zero")
+
+// with such, it's also straight forward to create lists:
+val myList = listOf(
+    0 to "Zero",
+    1 to "One",
+    2 to "Two",
+    ...
+)
+```

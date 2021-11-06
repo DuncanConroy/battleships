@@ -1,7 +1,8 @@
 package com.danielbunte.battleships.match
 
-class TurnCoordinator(private val players: List<Player>) {
+class TurnCoordinator {
 
+    private lateinit var players: List<Player>
     private var currentPlayer: Int = 0
 
     fun canMakeTurn(player: Player): Pair<TurnResult, Player> {
@@ -14,6 +15,10 @@ class TurnCoordinator(private val players: List<Player>) {
         }
 
         return TurnResult.PROCEED to players[currentPlayer]
+    }
+
+    fun init(players: List<Player>) {
+        this.players = players
     }
 
 }

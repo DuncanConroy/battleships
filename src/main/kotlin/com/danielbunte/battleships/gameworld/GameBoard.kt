@@ -12,7 +12,7 @@ import java.util.*
  * 4
  * ..
  */
-class GameBoard(private val width: Int, private val height: Int) {
+class GameBoard(val width: Int, val height: Int) {
 
     private val charCodeA = "A"[0].code
 
@@ -88,6 +88,8 @@ class GameBoard(private val width: Int, private val height: Int) {
         val xy = convertCoordinates(coordinates)
         return cells[xy.first][xy.second].ship
     }
+
+    fun copy() = GameBoard(width, height)
 }
 
 data class Cell(val ship: Ship?)

@@ -1,9 +1,13 @@
 package com.danielbunte.battleships.match
 
-class Match(private val hitCalculator: HitCalculator, private val turnCalculator: TurnCoordinator) {
+import com.danielbunte.battleships.gameworld.GameBoard
+import com.danielbunte.battleships.gameworld.Ship
+
+class Match(private val hitCalculator: HitCalculator, private val turnCoordinator: TurnCoordinator) {
 
     private val maxPlayers = 2
     private val players: MutableList<Player> = mutableListOf()
+    private var placementComplete: Boolean = false
 
     fun addPlayer(player: Player) {
         if (players.size == maxPlayers) {
@@ -13,7 +17,11 @@ class Match(private val hitCalculator: HitCalculator, private val turnCalculator
     }
 
     fun attemptAttack(attackingPlayer: Player, targetPlayer: Player, coordinates: String): Pair<GameResult, Player?> {
-        if (turnCalculator.canMakeTurn(attackingPlayer).first == TurnResult.NOT_YOUR_TURN) {
+        if (!placementComplete) {
+            return GameResult.SHIP_PLACEMENT to null
+        }
+
+        if (turnCoordinator.canMakeTurn(attackingPlayer).first == TurnResult.NOT_YOUR_TURN) {
             return GameResult.NOT_YOUR_TURN to null
         }
 
@@ -29,4 +37,22 @@ class Match(private val hitCalculator: HitCalculator, private val turnCalculator
         .filterNot { it.health == 0 }
         .size
 
+    fun initGame(gameBoard: GameBoard, ships: List<Ship>) {
+        players.forEach { player ->
+            player.init(gameBoard.copy(), ships.map { it.copy() })
+        }
+
+        turnCoordinator.init(players)
+    }
+
+    fun placeShip(playerA: Player, ship: Ship, coordinates: String, horizontal: Boolean) {
+        // TODO: test/throw if placement is completed already
+        playerA.gameBoard.placeShip(coordinates, ship, horizontal)
+
+        placementComplete = isPlacementComplete()
+    }
+
+    private fun isPlacementComplete() = players.none {
+        it.gameBoard.allShips.size != it.shipyard.size
+    }
 }

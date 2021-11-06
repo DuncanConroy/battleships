@@ -2,6 +2,8 @@ package com.danielbunte.battleships.match
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 class TurnCoordinatorTests {
 
@@ -10,7 +12,8 @@ class TurnCoordinatorTests {
         // given: two players
         val playerA = Player("PlayerA")
         val playerB = Player("PlayerB")
-        val classUnderTest = TurnCoordinator(listOf(playerA,playerB))
+        val classUnderTest = TurnCoordinator()
+        classUnderTest.init(listOf(playerA, playerB))
 
         // when: playerA tries to make consecutive turns
         classUnderTest.canMakeTurn(playerA)
@@ -28,7 +31,8 @@ class TurnCoordinatorTests {
         // given: two players
         val playerA = Player("PlayerA")
         val playerB = Player("PlayerB")
-        val classUnderTest = TurnCoordinator(listOf(playerA,playerB))
+        val classUnderTest = TurnCoordinator()
+        classUnderTest.init(listOf(playerA, playerB))
 
         // when: playerA tries to make consecutive turns
         classUnderTest.canMakeTurn(playerA)
@@ -39,5 +43,20 @@ class TurnCoordinatorTests {
 
         // and: PROCEED is returned
         assertEquals(TurnResult.PROCEED, result.first)
+    }
+
+    @Test
+    fun `init sets the players correctly`() {
+        // given: two players
+        val playerA = Player("PlayerA")
+        val playerB = Player("PlayerB")
+        val classUnderTest = TurnCoordinator()
+        assertThrows<UninitializedPropertyAccessException> { classUnderTest.canMakeTurn(playerA) }
+
+        // when: class is properly initialized
+        classUnderTest.init(listOf(playerA, playerB))
+
+        // then: no errors are thrown
+        assertDoesNotThrow { classUnderTest.canMakeTurn(playerA) }
     }
 }

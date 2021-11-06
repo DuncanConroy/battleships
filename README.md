@@ -4,7 +4,9 @@ A simulation of the famous battleship board game
 
 
 ## A quick intro to the Kotlin syntax
+
 ###Function/Method syntax
+
 ```
 fun hello(param1: String): String
  ^   ^     ^       ^        ^- return type
@@ -15,6 +17,7 @@ fun hello(param1: String): String
 ```
 
 ###Variables
+
 Kotlin is always strictly typed, but it's not necessary to add the type declaration to every element.
 ```
 var foo = "bar" // a mutable variable of type String (the type is automatically inferred by the compiler)
@@ -27,6 +30,7 @@ var foo: String? = null // by default, variables in Kotlin cannot be null, unles
 ```
 
 ###Control flows
+
 Kotlin makes use of functional and oo principles.
 ```
 val list = listOf("A","B","C")
@@ -46,6 +50,7 @@ ship?.let { // same logic as with "if ship != null"
 ```
 
 ###Structures
+
 The code makes some use of Pairs/Tuples. In Kotlin, it's very easy to create Pairs:
 ```
 val foo = 0 to "Zero" // -> same as val foo = Pair<Int, String>(0, "Zero")

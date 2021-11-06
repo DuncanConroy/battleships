@@ -17,8 +17,10 @@ class GameBoardTests {
         "A 1     , 0, 0",
         "a   2   , 0, 1",
         "B  1    , 1, 0",
-        "b      2, 1, 1",
-        "j   10  , 9, 9",
+        "b \t   2, 1, 1",
+        "j 10    , 9, 9",
+        "a.3     , 0, 2",
+        "a#3     , 0, 2",
     )
     fun `human readable coordinates are translated into x,y coordinates`(input: String, expectedX: Int, expectedY: Int) {
         // given: a game board instance

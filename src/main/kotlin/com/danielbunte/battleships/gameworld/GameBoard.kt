@@ -26,7 +26,7 @@ class GameBoard(private val width: Int, private val height: Int) {
     private val ships: MutableSet<Ship> = mutableSetOf()
 
     fun convertCoordinates(coordinates: String): Pair<Int, Int> {
-        val cleanedCoordinates = coordinates.replace(" ", "").uppercase(Locale.getDefault())
+        val cleanedCoordinates = coordinates.replace(Regex("[^a-zA-Z0-9]"), "").uppercase(Locale.getDefault())
         val x = cleanedCoordinates[0].code - charCodeA
         val y = parseInt(cleanedCoordinates.substring(1)) - 1
         return x to y

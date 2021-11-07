@@ -55,8 +55,7 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     private fun updateCells(xy: Pair<Int, Int>, ship: Ship, horizontal: Boolean) {
-        var x = xy.first
-        var y = xy.second
+        var (x, y) = xy
         repeat(ship.length) {
             cells[x][y] = Cell(ship)
             ship.cells.add(x to y)
@@ -69,8 +68,7 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     private fun canPlace(xy: Pair<Int, Int>, ship: Ship, horizontal: Boolean): Boolean {
-        var x = xy.first
-        var y = xy.second
+        var (x, y) = xy
         repeat(ship.length) {
             if (x > width - 1 || y > height - 1 || y < 0) {
                 return false

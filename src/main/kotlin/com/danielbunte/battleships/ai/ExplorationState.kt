@@ -20,6 +20,7 @@ class ExplorationState(
 
     private var currentState: State? = this
     private var next: State? = null
+    private var isActive = false
 
     private var _lastAttempt: String? = null
     val lastAttempt: String
@@ -32,6 +33,7 @@ class ExplorationState(
     }
 
     override fun run(): State? {
+        isActive = true
         val coordinates = aiClient.getAndBlockRandomCoordinate()
         _lastAttempt = coordinates
         match.attemptAttack(self, opponent, coordinates)
@@ -45,6 +47,7 @@ class ExplorationState(
     }
 
     override fun receive(dto: Dto) {
+        if (!isActive) return
         when (dto) {
             is AttackResultDto -> handleAttackResult(dto)
         }
@@ -59,6 +62,7 @@ class ExplorationState(
 
         if (dto.hitResult == "HIT") {
             currentState = next
+            isActive = false
         }
     }
 }

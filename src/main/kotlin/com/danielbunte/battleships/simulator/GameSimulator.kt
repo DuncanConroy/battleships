@@ -9,6 +9,7 @@ import com.danielbunte.battleships.io.PrintResultSubscriber
 import com.danielbunte.battleships.io.Subscriber
 import com.danielbunte.battleships.match.Match
 import com.danielbunte.battleships.match.Player
+import java.time.LocalDateTime
 
 class GameSimulator : Subscriber {
 
@@ -40,8 +41,10 @@ class GameSimulator : Subscriber {
         this.subscribeToMatch(match)
 
         while (isActive) {
-            roundsPlayed++
-            println(">>>>> Round $roundsPlayed <<<<<")
+            if (match.isActive) {
+                roundsPlayed++
+                println("[${LocalDateTime.now()}] >>>>> Round $roundsPlayed <<<<<")
+            }
             aiClientA.tick()
             aiClientB.tick()
         }

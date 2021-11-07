@@ -11,6 +11,10 @@ class Match(
     private val attackResultConverter: AttackResultConverter = AttackResultConverter()
 ) {
 
+    val isActive: Boolean
+        get() {
+            return placementComplete
+        }
     private val maxPlayers = 2
     private val players: MutableList<Player> = mutableListOf()
     private var placementComplete: Boolean = false

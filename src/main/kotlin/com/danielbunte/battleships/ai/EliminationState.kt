@@ -29,12 +29,14 @@ class EliminationState(
     private var lastAttack: Pair<String, Boolean> = "" to false
     private var previousHit = ""
     private var attackFlow = AttackFlow.RIGHT
+    private var isActive = false
 
     init {
         subscribeToMatch(match)
     }
 
     override fun run(): State? {
+        isActive = true
         // get last attempt coordinates
         val lastAttempt = getLastAttempt()
         // specify direction for next attacks -> right, down, left, up
@@ -99,6 +101,7 @@ class EliminationState(
     }
 
     override fun receive(dto: Dto) {
+        if (!isActive) return
         when (dto) {
             is AttackResultDto -> handleAttackResult(dto)
         }
@@ -121,6 +124,7 @@ class EliminationState(
         currentState = next
         previousHit = ""
         lastAttack = "" to false
+        isActive = false
     }
 
     override fun subscribeToMatch(match: Match) {

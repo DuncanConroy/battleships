@@ -20,15 +20,15 @@ class PlaceShipsState(
 
     private val shipsToPlace = player.shipyard.sortedByDescending { it.length }.toMutableList()
     private var next: State? = null
+    private var isActive = false
 
     init {
         subscribeToMatch(match)
     }
 
     override fun run(): State? {
+        isActive = true
         var success: Boolean
-
-        if (shipsToPlace.isEmpty()) return next
 
         val ship = shipsToPlace.removeAt(0)
         do {
@@ -36,6 +36,11 @@ class PlaceShipsState(
             val horizontal = Random().nextBoolean()
             success = match.placeShip(player, ship, coordinates, horizontal)
         } while (!success)
+
+        if (shipsToPlace.isEmpty()) {
+            isActive = false
+            return next
+        }
 
         return this
     }
@@ -45,6 +50,8 @@ class PlaceShipsState(
     }
 
     override fun receive(dto: Dto) {
+        if (!isActive) return
+
         when (dto) {
             is AttackResultDto -> return
         }

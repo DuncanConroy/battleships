@@ -51,7 +51,7 @@ class AIClient(val self: Player) : Subscriber {
 
     fun getAndBlockRandomCoordinate(): String {
         val freeCoordinates = allCoordinates - attackedCoordinates.toSet()
-        val index = Random().nextInt(freeCoordinates.size)
+        val index = Random().nextInt(freeCoordinates.size.coerceAtLeast(1))
         val coordinates = freeCoordinates[index]
 
         attackedCoordinates.add(coordinates)

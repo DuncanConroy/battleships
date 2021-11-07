@@ -5,7 +5,7 @@ import com.danielbunte.battleships.match.Match
 class PrintResultSubscriber : Subscriber {
 
     override fun receiveAttackResult(attackResult: AttackResultDto) {
-        TODO("Not yet implemented")
+//        TODO("Not yet implemented")
     }
 
     override fun registerToMatch(match: Match) {

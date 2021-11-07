@@ -12,6 +12,6 @@ data class AttackResultDto(
 
 ) {
     init{
-        TODO("Include whole gameBoard as 0,1,2")
+//        TODO("Include whole gameBoard as 0,1,2")
     }
 }

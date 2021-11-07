@@ -2,6 +2,8 @@ package com.danielbunte.battleships.match
 
 import com.danielbunte.battleships.gameworld.GameBoard
 import com.danielbunte.battleships.gameworld.Ship
+import com.danielbunte.battleships.io.PrintResultSubscriber
+import com.danielbunte.battleships.match.io.AttackResultConverter
 import com.danielbunte.battleships.mockkRelaxed
 import io.mockk.every
 import io.mockk.verify
@@ -231,10 +233,31 @@ class MatchTests {
         }
     }
 
-//    @Test
-//    fun `attemptAttack informs subscribers of result`(){
-//        // given: a match with subscribers
-//        val classUnderTest = Match(mockkRelaxed(), mockkRelaxed())
-//        classUnderTest.subscribe()
-//    }
+    @Test
+    fun `attemptAttack informs subscribers of result`() {
+        // given: a match with subscribers
+        val attackResultConverter = mockkRelaxed<AttackResultConverter>()
+        val classUnderTest = Match(mockkRelaxed(), mockkRelaxed(), attackResultConverter)
+        val subscriberA = mockkRelaxed<PrintResultSubscriber>()
+        val subscriberB = mockkRelaxed<PrintResultSubscriber>()
+        val playerA = Player("A")
+        val playerB = Player("B")
+        classUnderTest.subscribe(subscriberA)
+        classUnderTest.subscribe(subscriberB)
+        classUnderTest.addPlayer(playerA)
+        classUnderTest.addPlayer(playerB)
+        classUnderTest.initGame(GameBoard(10, 10), listOf(Ship("Testboat", 1)))
+        classUnderTest.placeShip(playerA, playerA.shipyard[0], "A1", true)
+        classUnderTest.placeShip(playerB, playerB.shipyard[0], "A1", true)
+
+        // when: attack is attempted
+        classUnderTest.attemptAttack(mockkRelaxed(), mockkRelaxed(), "D3")
+
+        // then: subscribers are informed
+        verifyOrder {
+            attackResultConverter.convert(any())
+            subscriberA.receiveAttackResult(any())
+            subscriberB.receiveAttackResult(any())
+        }
+    }
 }

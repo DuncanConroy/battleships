@@ -4,5 +4,5 @@ import com.danielbunte.battleships.match.Match
 
 interface Subscriber {
     fun receiveAttackResult(attackResult: AttackResultDto)
-    fun registerToMatch(match: Match)
+    fun subscribeToMatch(match: Match)
 }

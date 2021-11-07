@@ -10,7 +10,7 @@ import java.util.*
 /**
  * In a real-world scenario, the AI wouldn't have access to the player and match objects directly,
  * but to keep effort low, we're taking this shortcut here.
- * The AI should work completely independent from the inner game objects.
+ * The AI should work completely independent of the inner game objects.
  */
 class PlaceShipsState(private val player: Player, private val match: Match) : State, Subscriber {
 
@@ -25,9 +25,7 @@ class PlaceShipsState(private val player: Player, private val match: Match) : St
         var success: Boolean
         val ship = shipsToPlace.removeAt(0)
         do {
-            val x = Random().nextInt(player.gameBoard.width)
-            val y = Random().nextInt(player.gameBoard.height)
-            val coordinates = player.gameBoard.convertCoordinates(x, y)
+            val coordinates = randomCoordinate(player.gameBoard)
             val horizontal = Random().nextBoolean()
             success = match.placeShip(player, ship, coordinates, horizontal)
         } while (!success)

@@ -119,6 +119,10 @@ class GameBoard(val width: Int, val height: Int) {
         val xy = convertCoordinates(coordinates)
         return cells[xy.first][xy.second].state
     }
+
+    fun getBoardView() = cells.map { columns ->
+        columns.map { it.state }
+    }
 }
 
 data class Cell(val ship: Ship?, var state: CellState = CellState.WATER)

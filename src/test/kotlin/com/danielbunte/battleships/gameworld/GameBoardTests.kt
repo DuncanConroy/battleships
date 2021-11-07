@@ -202,4 +202,26 @@ class GameBoardTests {
         assertEquals(CellState.DESTROYED, classUnderTest.getCellState("D1"), "D1")
         assertEquals(CellState.DESTROYED, classUnderTest.getCellState("E1"), "E1")
     }
+
+    @Test
+    fun `getBoardView returns simple representation of the board`() {
+        // given: a Board with different cell states
+        val classUnderTest = GameBoard(5, 5)
+        classUnderTest.updateCellState("A1", HitResult.HIT)
+        classUnderTest.updateCellState("A2", HitResult.MISS)
+        classUnderTest.updateCellState("A3", HitResult.DESTROYED)
+
+        // when: getBoardView is invoked
+        val result = classUnderTest.getBoardView()
+
+        // then: all cells are mapped into a simple representation
+        assertEquals(CellState.HIT, result[0][0])
+        assertEquals(CellState.MISS, result[0][1])
+        assertEquals(CellState.DESTROYED, result[0][2])
+        assertEquals(CellState.WATER, result[0][3])
+        assertEquals(CellState.WATER, result[0][4])
+        repeat(5) {
+            assertEquals(CellState.WATER, result[1][it])
+        }
+    }
 }

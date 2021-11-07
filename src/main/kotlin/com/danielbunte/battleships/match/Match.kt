@@ -24,26 +24,50 @@ class Match(
     }
 
     fun attemptAttack(attackingPlayer: Player, targetPlayer: Player, coordinates: String): Pair<GameResult, Player?> {
+        // to be honest, I don't like the flow of this method atm. needs refactoring with early returns and no checks for gameResult!=null
+
+        var gameResult: GameResult? = null
+        var winner: Player? = null
+        var nextPlayer: Player? = null
+        var hitResult: HitResult? = null
         if (!placementComplete) {
-            return GameResult.SHIP_PLACEMENT to null
+            gameResult = GameResult.SHIP_PLACEMENT
         }
 
-        if (turnCoordinator.canMakeTurn(attackingPlayer).first == TurnResult.NOT_YOUR_TURN) {
-            return GameResult.NOT_YOUR_TURN to null
+        if (gameResult == null) {
+            val turnResult = turnCoordinator.makeTurn(attackingPlayer)
+            nextPlayer = turnResult.second
+            if (turnResult.first == TurnResult.NOT_YOUR_TURN) {
+                gameResult = GameResult.NOT_YOUR_TURN
+            }
         }
 
-        val hitResult = hitCalculator.attemptAttack(targetPlayer.gameBoard, coordinates)
-        targetPlayer.gameBoard.updateCellState(coordinates, hitResult)
-        informSubscribers(targetPlayer)
-        if (hitResult == HitResult.DESTROYED && calculateActiveShips(targetPlayer) == 0) {
-            return GameResult.WON to attackingPlayer
+        if (gameResult == null) {
+            hitResult = hitCalculator.attemptAttack(targetPlayer.gameBoard, coordinates)
+            targetPlayer.gameBoard.updateCellState(coordinates, hitResult)
+            if (hitResult == HitResult.DESTROYED && calculateActiveShips(targetPlayer) == 0) {
+                gameResult = GameResult.WON
+                winner = attackingPlayer
+            }
         }
 
-        return GameResult.ONGOING to null
+        if (gameResult == null) {
+            gameResult = GameResult.ONGOING
+        }
+        informSubscribers(attackingPlayer, targetPlayer, coordinates, gameResult, nextPlayer, hitResult, winner)
+        return gameResult to winner
     }
 
-    private fun informSubscribers(targetPlayer: Player) {
-        val attackResult = attackResultConverter.convert(targetPlayer.gameBoard.getBoardView())
+    private fun informSubscribers(
+        attackingPlayer: Player,
+        targetPlayer: Player,
+        coordinates: String,
+        gameResult: GameResult,
+        nextPlayer: Player?,
+        hitResult: HitResult?,
+        winner: Player?
+    ) {
+        val attackResult = attackResultConverter.convert(attackingPlayer, targetPlayer, coordinates, gameResult, nextPlayer, hitResult, winner)
         subscribers.forEach {
             it.receiveAttackResult(attackResult)
         }

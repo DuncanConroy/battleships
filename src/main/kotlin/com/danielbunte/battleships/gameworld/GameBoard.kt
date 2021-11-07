@@ -18,8 +18,8 @@ class GameBoard(val width: Int, val height: Int) {
     private val charCodeA = "A"[0].code
 
     // colums -> rows -> cells
-    private val cells: List<MutableList<Cell>> = (0..width).map {
-        (0..height).map {
+    private val cells: List<MutableList<Cell>> = (0 until width).map {
+        (0 until height).map {
             Cell(null)
         }.toMutableList()
     }

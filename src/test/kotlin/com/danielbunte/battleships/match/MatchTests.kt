@@ -41,6 +41,7 @@ class MatchTests {
         classUnderTest.placeShip(playerA, mockkRelaxed(), coordinates, true)
         val hitResult = HitResult.MISS
         every { hitCalculator.attemptAttack(any(), coordinates) } returns hitResult
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to playerB)
 
         // when: attemptAttack is invoked
         val result = classUnderTest.attemptAttack(playerA, playerB, coordinates)
@@ -48,7 +49,7 @@ class MatchTests {
         // then: turnCoordinator is invoked, followed by hitCalculator
         assertEquals(GameResult.ONGOING, result.first)
         verifyOrder {
-            turnCoordinator.canMakeTurn(playerA)
+            turnCoordinator.makeTurn(playerA)
             hitCalculator.attemptAttack(playerB.gameBoard, coordinates)
             playerB.gameBoard.updateCellState(coordinates, hitResult)
         }
@@ -63,7 +64,7 @@ class MatchTests {
         val playerB = mockkRelaxed<Player>()
         classUnderTest.placeShip(playerA, mockkRelaxed(), "", true)
 
-        every { turnCoordinator.canMakeTurn(any()) } returns (TurnResult.NOT_YOUR_TURN to playerA)
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.NOT_YOUR_TURN to playerA)
 
         // when: attemptAttack is invoked
         val result = classUnderTest.attemptAttack(playerA, playerB, "")
@@ -84,12 +85,14 @@ class MatchTests {
         playerB.init(gameBoardB, shipyardB)
 
         val hitCalculator = mockkRelaxed<HitCalculator>()
-        val classUnderTest = Match(hitCalculator, mockkRelaxed())
+        val turnCoordinator = mockkRelaxed<TurnCoordinator>()
+        val classUnderTest = Match(hitCalculator, turnCoordinator)
         classUnderTest.addPlayer(playerA)
         classUnderTest.addPlayer(playerB)
         classUnderTest.placeShip(playerB, ship, "A1", true)
 
         every { hitCalculator.attemptAttack(any(), any()) } returns HitResult.DESTROYED
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to playerB)
 
         // when: ship is hit
         val result = classUnderTest.attemptAttack(playerA, playerB, "A1")
@@ -103,9 +106,11 @@ class MatchTests {
     fun `game is ongoing after a non-win attack`() {
         // given: a simple match
         val hitCalculator = mockkRelaxed<HitCalculator>()
-        every { hitCalculator.attemptAttack(any(), any()) } returns HitResult.MISS
-        val classUnderTest = Match(hitCalculator, mockkRelaxed())
+        val turnCoordinator = mockkRelaxed<TurnCoordinator>()
+        val classUnderTest = Match(hitCalculator, turnCoordinator)
         classUnderTest.placeShip(mockkRelaxed(), mockkRelaxed(), "", true)
+        every { hitCalculator.attemptAttack(any(), any()) } returns HitResult.MISS
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to Player("A"))
 
         // when: a non-winning attack is attempted
         val result = classUnderTest.attemptAttack(mockkRelaxed(), mockkRelaxed(), "A1")
@@ -138,7 +143,8 @@ class MatchTests {
     @Test
     fun `game is ongoing, when all ships have been placed`() {
         // given: a simple match
-        val classUnderTest = Match(mockkRelaxed(), mockkRelaxed())
+        val turnCoordinator = mockkRelaxed<TurnCoordinator>()
+        val classUnderTest = Match(mockkRelaxed(), turnCoordinator)
         val playerA = Player("Player A")
         val playerB = Player("Player B")
         val ships = listOf(Ship("Carrier", 5), Ship("Testboat", 1))
@@ -149,6 +155,7 @@ class MatchTests {
         classUnderTest.placeShip(playerA, playerA.shipyard[1], "A2", true)
         classUnderTest.placeShip(playerB, playerB.shipyard[0], "A1", true)
         classUnderTest.placeShip(playerB, playerB.shipyard[1], "A2", true)
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to playerB)
 
         // when: attemptAttack is called after ships are placed
         val result = classUnderTest.attemptAttack(playerA, playerB, "A1")
@@ -161,13 +168,15 @@ class MatchTests {
     @Test
     fun `placeShip places ship on gameBoard`() {
         // given: a match
-        val classUnderTest = Match(mockkRelaxed(), mockkRelaxed())
+        val turnCoordinator = mockkRelaxed<TurnCoordinator>()
+        val classUnderTest = Match(mockkRelaxed(), turnCoordinator)
         val playerA = Player("Player A")
         val gameBoardA = GameBoard(10, 10)
         val testBoat = Ship("Testboat", 5)
         val cruiser = Ship("Cruiser", 5)
         playerA.init(gameBoardA, listOf(testBoat, cruiser))
         classUnderTest.addPlayer(playerA)
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to playerA)
 
         // when: placeShip is invoked
         classUnderTest.placeShip(playerA, playerA.shipyard[0], "A1", true)
@@ -237,7 +246,8 @@ class MatchTests {
     fun `attemptAttack informs subscribers of result`() {
         // given: a match with subscribers
         val attackResultConverter = mockkRelaxed<AttackResultConverter>()
-        val classUnderTest = Match(mockkRelaxed(), mockkRelaxed(), attackResultConverter)
+        val turnCoordinator = mockkRelaxed<TurnCoordinator>()
+        val classUnderTest = Match(mockkRelaxed(), turnCoordinator, attackResultConverter)
         val subscriberA = mockkRelaxed<PrintResultSubscriber>()
         val subscriberB = mockkRelaxed<PrintResultSubscriber>()
         val playerA = Player("A")
@@ -249,13 +259,14 @@ class MatchTests {
         classUnderTest.initGame(GameBoard(10, 10), listOf(Ship("Testboat", 1)))
         classUnderTest.placeShip(playerA, playerA.shipyard[0], "A1", true)
         classUnderTest.placeShip(playerB, playerB.shipyard[0], "A1", true)
+        every { turnCoordinator.makeTurn(any()) } returns (TurnResult.PROCEED to playerB)
 
         // when: attack is attempted
         classUnderTest.attemptAttack(mockkRelaxed(), mockkRelaxed(), "D3")
 
         // then: subscribers are informed
         verifyOrder {
-            attackResultConverter.convert(any())
+            attackResultConverter.convert(any(), any(), any(), any(), any(), any(), any())
             subscriberA.receiveAttackResult(any())
             subscriberB.receiveAttackResult(any())
         }

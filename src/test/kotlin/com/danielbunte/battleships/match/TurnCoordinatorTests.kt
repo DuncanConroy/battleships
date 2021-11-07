@@ -16,8 +16,8 @@ class TurnCoordinatorTests {
         classUnderTest.init(listOf(playerA, playerB))
 
         // when: playerA tries to make consecutive turns
-        classUnderTest.canMakeTurn(playerA)
-        val result = classUnderTest.canMakeTurn(playerA)
+        classUnderTest.makeTurn(playerA)
+        val result = classUnderTest.makeTurn(playerA)
 
         // then: NOT_YOUR_TURN is returned
         assertEquals(TurnResult.NOT_YOUR_TURN, result.first)
@@ -35,8 +35,8 @@ class TurnCoordinatorTests {
         classUnderTest.init(listOf(playerA, playerB))
 
         // when: playerA tries to make consecutive turns
-        classUnderTest.canMakeTurn(playerA)
-        val result = classUnderTest.canMakeTurn(playerB)
+        classUnderTest.makeTurn(playerA)
+        val result = classUnderTest.makeTurn(playerB)
 
         // then: next player is playerA
         assertEquals(playerA, result.second)
@@ -51,12 +51,12 @@ class TurnCoordinatorTests {
         val playerA = Player("PlayerA")
         val playerB = Player("PlayerB")
         val classUnderTest = TurnCoordinator()
-        assertThrows<UninitializedPropertyAccessException> { classUnderTest.canMakeTurn(playerA) }
+        assertThrows<UninitializedPropertyAccessException> { classUnderTest.makeTurn(playerA) }
 
         // when: class is properly initialized
         classUnderTest.init(listOf(playerA, playerB))
 
         // then: no errors are thrown
-        assertDoesNotThrow { classUnderTest.canMakeTurn(playerA) }
+        assertDoesNotThrow { classUnderTest.makeTurn(playerA) }
     }
 }

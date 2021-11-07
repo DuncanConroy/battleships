@@ -224,4 +224,16 @@ class GameBoardTests {
             assertEquals(CellState.WATER, result[1][it])
         }
     }
+
+    @Test
+    fun `GameBoard has correct size after initialization`() {
+        // given: a GameBoard
+        val width = 4
+        val height = 3
+        val gameBoard = GameBoard(width, height)
+
+        // then: has correct size
+        assertEquals(width, gameBoard.getBoardView().size)
+        assertEquals(height, gameBoard.getBoardView()[0].size)
+    }
 }

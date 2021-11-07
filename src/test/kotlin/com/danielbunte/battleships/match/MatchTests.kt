@@ -36,7 +36,9 @@ class MatchTests {
         val coordinates = "C4"
         classUnderTest.addPlayer(playerA)
         classUnderTest.addPlayer(playerB)
-        classUnderTest.placeShip(playerA, mockkRelaxed(), "", true)
+        classUnderTest.placeShip(playerA, mockkRelaxed(), coordinates, true)
+        val hitResult = HitResult.MISS
+        every { hitCalculator.attemptAttack(any(), coordinates) } returns hitResult
 
         // when: attemptAttack is invoked
         val result = classUnderTest.attemptAttack(playerA, playerB, coordinates)
@@ -46,6 +48,7 @@ class MatchTests {
         verifyOrder {
             turnCoordinator.canMakeTurn(playerA)
             hitCalculator.attemptAttack(playerB.gameBoard, coordinates)
+            playerB.gameBoard.updateCellState(coordinates, hitResult)
         }
     }
 
@@ -145,8 +148,8 @@ class MatchTests {
         classUnderTest.placeShip(playerB, playerB.shipyard[0], "A1", true)
         classUnderTest.placeShip(playerB, playerB.shipyard[1], "A2", true)
 
-        // when: attemptAttack is called before ships are placed
-        val result = classUnderTest.attemptAttack(playerA, playerB, "")
+        // when: attemptAttack is called after ships are placed
+        val result = classUnderTest.attemptAttack(playerA, playerB, "A1")
 
         // then: placement is returned
         assertEquals(GameResult.ONGOING, result.first)

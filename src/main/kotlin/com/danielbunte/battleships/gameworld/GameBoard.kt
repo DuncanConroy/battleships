@@ -1,5 +1,6 @@
 package com.danielbunte.battleships.gameworld
 
+import com.danielbunte.battleships.match.HitResult
 import java.lang.Integer.parseInt
 import java.util.*
 
@@ -58,6 +59,7 @@ class GameBoard(val width: Int, val height: Int) {
         var y = xy.second
         repeat(ship.length) {
             cells[x][y] = Cell(ship)
+            ship.cells.add(x to y)
             if (horizontal) {
                 x++
             } else {
@@ -94,6 +96,29 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     fun copy() = GameBoard(width, height)
+
+    fun updateCellState(coordinates: String, state: HitResult) {
+        val xy = convertCoordinates(coordinates)
+        when (state) {
+            HitResult.HIT -> cells[xy.first][xy.second].state = CellState.HIT
+            HitResult.MISS -> cells[xy.first][xy.second].state = CellState.MISS
+            HitResult.DESTROYED -> {
+                val cell = cells[xy.first][xy.second]
+                if (cell.ship?.health == 0) {
+                    cell.ship.cells.forEach {
+                        cells[it.first][it.second].state = CellState.DESTROYED
+                    }
+                } else {
+                    cell.state = CellState.DESTROYED
+                }
+            }
+        }
+    }
+
+    fun getCellState(coordinates: String): CellState {
+        val xy = convertCoordinates(coordinates)
+        return cells[xy.first][xy.second].state
+    }
 }
 
-data class Cell(val ship: Ship?) //TODO: state -> empty, MISS, hit, destroyed
+data class Cell(val ship: Ship?, var state: CellState = CellState.WATER)

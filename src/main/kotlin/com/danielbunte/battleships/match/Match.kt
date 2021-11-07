@@ -26,7 +26,7 @@ class Match(private val hitCalculator: HitCalculator, private val turnCoordinato
         }
 
         val hitResult = hitCalculator.attemptAttack(targetPlayer.gameBoard, coordinates)
-        // TODO: update gameBoard with hitResult
+        targetPlayer.gameBoard.updateCellState(coordinates, hitResult)
         if (hitResult == HitResult.DESTROYED && calculateActiveShips(targetPlayer) == 0) {
             return GameResult.WON to attackingPlayer
         }
@@ -46,9 +46,9 @@ class Match(private val hitCalculator: HitCalculator, private val turnCoordinato
         turnCoordinator.init(players)
     }
 
-    fun placeShip(playerA: Player, ship: Ship, coordinates: String, horizontal: Boolean) {
-        // TODO: test/throw if placement is completed already
-        playerA.gameBoard.placeShip(coordinates, ship, horizontal)
+    fun placeShip(player: Player, ship: Ship, coordinates: String, horizontal: Boolean) {
+        if (placementComplete) return
+        player.gameBoard.placeShip(coordinates, ship, horizontal)
 
         placementComplete = isPlacementComplete()
     }

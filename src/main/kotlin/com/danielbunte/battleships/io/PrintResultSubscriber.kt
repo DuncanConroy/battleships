@@ -5,16 +5,22 @@ import java.util.*
 
 class PrintResultSubscriber : Subscriber {
 
-    override fun receiveAttackResult(attackResult: AttackResultDto) {
+    override fun receive(dto: Dto) {
+        when (dto) {
+            is AttackResultDto -> printAttackResult(dto)
+        }
+    }
+
+    fun printAttackResult(dto: AttackResultDto) {
         println(
             """
-            |Attacker              : ${attackResult.attackingPlayerName}
-            |Target                : ${attackResult.targetPlayerName}
-            |Coordinates           : ${attackResult.coordinates.uppercase(Locale.getDefault())}
-            |Outcome               : ${attackResult.hitResult}
-            |Game state            : ${attackResult.gameResult}
+            |Attacker              : ${dto.attackingPlayerName}
+            |Target                : ${dto.targetPlayerName}
+            |Coordinates           : ${dto.coordinates.uppercase(Locale.getDefault())}
+            |Outcome               : ${dto.hitResult}
+            |Game state            : ${dto.gameResult}
             |Target player's board :
-            |${createPrintableBoard(attackResult, true)}
+            |${createPrintableBoard(dto, true)}
             |
         """.trimMargin("|")
         )

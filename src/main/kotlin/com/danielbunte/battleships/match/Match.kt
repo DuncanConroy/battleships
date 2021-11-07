@@ -69,7 +69,7 @@ class Match(
     ) {
         val attackResult = attackResultConverter.convert(attackingPlayer, targetPlayer, coordinates, gameResult, nextPlayer, hitResult, winner)
         subscribers.forEach {
-            it.receiveAttackResult(attackResult)
+            it.receive(attackResult)
         }
     }
 

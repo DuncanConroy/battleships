@@ -13,4 +13,4 @@ data class AttackResultDto(
     val nextPlayer: String,
     val targetPlayerBoardView: List<List<String>>,
     val winner: String
-)
+) : Dto()

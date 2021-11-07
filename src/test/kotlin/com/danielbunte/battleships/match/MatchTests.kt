@@ -267,8 +267,8 @@ class MatchTests {
         // then: subscribers are informed
         verifyOrder {
             attackResultConverter.convert(any(), any(), any(), any(), any(), any(), any())
-            subscriberA.receiveAttackResult(any())
-            subscriberB.receiveAttackResult(any())
+            subscriberA.receive(any())
+            subscriberB.receive(any())
         }
     }
 }

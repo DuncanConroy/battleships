@@ -85,11 +85,13 @@ class Match(
         turnCoordinator.init(players)
     }
 
-    fun placeShip(player: Player, ship: Ship, coordinates: String, horizontal: Boolean) {
-        if (placementComplete) return
-        player.gameBoard.placeShip(coordinates, ship, horizontal)
+    fun placeShip(player: Player, ship: Ship, coordinates: String, horizontal: Boolean): Boolean {
+        if (placementComplete) return false
+        val result = player.gameBoard.placeShip(coordinates, ship, horizontal)
 
         placementComplete = isPlacementComplete()
+
+        return result
     }
 
     private fun isPlacementComplete() = players.none {

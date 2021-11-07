@@ -1,11 +1,12 @@
 package com.danielbunte.battleships
 
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.runApplication
+import com.danielbunte.battleships.simulator.GameSimulator
 
-@SpringBootApplication
-open class BattleshipsApplication
+//@SpringBootApplication
+//open class BattleshipsApplication
 
 fun main(args: Array<String>) {
-    runApplication<BattleshipsApplication>(*args)
+    val simulator = GameSimulator()
+    simulator.start()
+//    runApplication<BattleshipsApplication>(*args)
 }

@@ -44,7 +44,7 @@ var ships: List<Ship?> = listOf(null, Ship("Curiser"))
 println(ships[0]?.name) // prints null, due to the ? safecall
 println(ships[0]!!.name) // throws an NPE, due to !! not-null assertion operator
 println(ships[0].name) // does not compile, because list elements can be nullable
-println(ships[1].name) // prints "Cruiser"
+println(ships[1]?.name) // prints "Cruiser"
 
 var ship: Ship?
 [..] // more code
@@ -66,6 +66,10 @@ val myList = listOf(
     2 to "Two",
     ...
 )
+
+// Pairs can also easily be destructed
+val xy = x to y
+val (a, b) = xy // a == x, b == y
 ```
 
 ## A word on frameworks

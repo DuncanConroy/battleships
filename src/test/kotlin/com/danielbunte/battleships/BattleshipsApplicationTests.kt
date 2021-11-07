@@ -8,14 +8,13 @@ import com.danielbunte.battleships.match.Match
 import com.danielbunte.battleships.match.Player
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
+//@SpringBootTest
 class BattleshipsApplicationTests {
 
-    @Test
-    fun contextLoads() {
-    }
+//    @Test
+//    fun contextLoads() {
+//    }
 
     @Test
     fun `fully integrated test with two players, where player A wins`() {

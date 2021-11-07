@@ -67,3 +67,9 @@ val myList = listOf(
     ...
 )
 ```
+
+## A word on frameworks
+
+I started this project with the Spring initializer, because I thought I might add a web-client to this. Due to missing
+time, I didn't do it yet. The game doesn't make any use of the Spring framework, but could be easily modified in the
+future. The Subscribers make it easy to sent game information to other clients.

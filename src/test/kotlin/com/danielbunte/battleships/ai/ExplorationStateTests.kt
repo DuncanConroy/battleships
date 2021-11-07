@@ -22,7 +22,8 @@ internal class ExplorationStateTests {
         match.initGame(GameBoard(2, 1), listOf(Ship("Testboat", 2)))
         match.placeShip(playerA, playerA.shipyard[0], "A1", true)
         match.placeShip(playerB, playerB.shipyard[0], "A1", true)
-        val classUnderTest = ExplorationState(playerA, playerB, match)
+        val aiClient = AIClient(playerA)
+        val classUnderTest = ExplorationState(aiClient, playerA, playerB, match)
 
         // when: run is invoked
         val nextState = classUnderTest.run()

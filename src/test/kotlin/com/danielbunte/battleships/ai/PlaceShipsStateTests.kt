@@ -7,7 +7,6 @@ import com.danielbunte.battleships.match.Player
 import com.danielbunte.battleships.mockkRelaxed
 import io.mockk.every
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 
 class PlaceShipsStateTests {
@@ -18,10 +17,11 @@ class PlaceShipsStateTests {
         val match = mockkRelaxed<Match>()
         val player = Player("Player A")
         player.init(GameBoard(10, 10), listOf(Ship("Testboat", 2), Ship("Carrier", 5)))
+        val aiClient = AIClient(player)
         every { match.placeShip(any(), any(), any(), any()) } answers {
             player.gameBoard.placeShip(arg(2), arg(1), arg(3))
         }
-        val classUnderTest = PlaceShipsState(player, match)
+        val classUnderTest = PlaceShipsState(aiClient, player, match)
 
         // when: run is invoked
         val nextState = classUnderTest.run()
@@ -33,11 +33,9 @@ class PlaceShipsStateTests {
         assertEquals(classUnderTest, nextState)
 
         // and when: run is invoked again
-        val finalState = classUnderTest.run()
+        classUnderTest.run()
 
         // then: the next longest ship is placed
         assertEquals(2, player.shipyard[0].cells.size)
-        // and: next state is null (nothing is set)
-        assertNull(finalState)
     }
 }

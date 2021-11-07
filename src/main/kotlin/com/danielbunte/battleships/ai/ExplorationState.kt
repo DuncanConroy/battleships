@@ -12,6 +12,7 @@ import com.danielbunte.battleships.match.Player
  * The AI should work completely independent of the inner game objects.
  */
 class ExplorationState(
+    private val aiClient: AIClient,
     private val self: Player,
     private val opponent: Player,
     private val match: Match
@@ -26,22 +27,16 @@ class ExplorationState(
             return _lastAttempt!!
         }
 
-    private var _attackedCoordinates = mutableListOf<String>()
-    val attackedCoordinates: List<String>
-        get() {
-            return _attackedCoordinates.toList()
-        }
-
     init {
         subscribeToMatch(match)
     }
 
     override fun run(): State? {
-        val coordinates = randomCoordinate(self.gameBoard)
-        match.attemptAttack(self, opponent, coordinates)
+        val coordinates = aiClient.getAndBlockRandomCoordinate()
         _lastAttempt = coordinates
+        match.attemptAttack(self, opponent, coordinates)
 
-        // As the code is synchronous, the "receive" will be called by the match before the return statement. Therefore, currentState holds the correct next state
+        // As the code is synchronous, the "receive" will be called by the match before this return statement. Therefore, currentState holds the correct next state
         return currentState
     }
 

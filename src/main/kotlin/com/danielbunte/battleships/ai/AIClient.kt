@@ -35,11 +35,11 @@ class AIClient(val self: Player) : Subscriber {
 
         val placeShipsState = PlaceShipsState(this, self, match)
         val explorationState = ExplorationState(this, self, opponent, match)
-//        val eliminationState = EliminationState(this, explorationState, self, opponent, match)
+        val eliminationState = EliminationState(this, explorationState, self, opponent, match)
         placeShipsState.setNextState(explorationState)
-//        explorationState.setNextState(eliminationState)
-        explorationState.setNextState(explorationState)
-        states = listOf(placeShipsState, explorationState)//, eliminationState)
+        explorationState.setNextState(eliminationState)
+        eliminationState.setNextState(explorationState)
+        states = listOf(placeShipsState, explorationState, eliminationState)
         currentState = placeShipsState
     }
 
@@ -59,7 +59,7 @@ class AIClient(val self: Player) : Subscriber {
     }
 
     fun blockCoordinate(gameBoard: GameBoard, x: Int, y: Int): String {
-        if (x > gameBoard.width - 1 || y > gameBoard.height - 1) return ""
+        if (x < 0 || y < 0 || x > gameBoard.width - 1 || y > gameBoard.height - 1) return ""
         val coordinate = gameBoard.convertCoordinates(x, y)
         if (attackedCoordinates.contains(coordinate)) return ""
         attackedCoordinates.add(coordinate)

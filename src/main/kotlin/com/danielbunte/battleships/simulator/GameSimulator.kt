@@ -41,6 +41,7 @@ class GameSimulator : Subscriber {
 
         while (isActive) {
             roundsPlayed++
+            println(">>>>> Round $roundsPlayed <<<<<")
             aiClientA.tick()
             aiClientB.tick()
         }

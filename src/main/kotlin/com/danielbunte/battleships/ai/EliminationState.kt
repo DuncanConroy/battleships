@@ -27,6 +27,7 @@ class EliminationState(
     private var currentState: State? = this
     private var next: State? = null
     private var lastAttack: Pair<String, Boolean> = "" to false
+    private var previousHit = ""
     private var attackFlow = AttackFlow.RIGHT
 
     init {
@@ -48,6 +49,7 @@ class EliminationState(
     private fun getNextCoordinate(lastAttempt: String): String {
         var coordinate: String
         var lastHit = lastAttempt
+        var loops = 0
         do {
             val (x, y) = self.gameBoard.convertCoordinates(lastHit)
             var newX = x
@@ -55,14 +57,21 @@ class EliminationState(
             when (attackFlow) {
                 AttackFlow.RIGHT -> newX = x + 1
                 AttackFlow.LEFT -> newX = x - 1
-                AttackFlow.UP -> newY = y
+                AttackFlow.UP -> newY = y - 1
                 AttackFlow.DOWN -> newY = y + 1
             }
 
             coordinate = aiClient.blockCoordinate(self.gameBoard, newX, newY)
             if (coordinate.isEmpty()) {
-                lastHit = previousState.lastAttempt
+                lastHit = previousHit.ifEmpty {
+                    previousState.lastAttempt
+                }
                 attackFlow = rotateAttackFlow()
+            }
+            ++loops
+            if (loops > AttackFlow.values().size) {
+                coordinate = aiClient.getAndBlockRandomCoordinate()
+                exit()
             }
         } while (coordinate.isEmpty())
 
@@ -96,11 +105,22 @@ class EliminationState(
     }
 
     private fun handleAttackResult(dto: AttackResultDto) {
+        if (dto.attackingPlayerName !== self.name) return
+
         if (dto.hitResult == "DESTROYED") {
-            currentState = next
+            exit()
         }
 
         lastAttack = dto.coordinates to (dto.hitResult == "HIT")
+        if (lastAttack.second) {
+            previousHit = lastAttack.first
+        }
+    }
+
+    private fun exit() {
+        currentState = next
+        previousHit = ""
+        lastAttack = "" to false
     }
 
     override fun subscribeToMatch(match: Match) {
@@ -110,7 +130,7 @@ class EliminationState(
 
 enum class AttackFlow {
     RIGHT,
+    DOWN,
     LEFT,
-    UP,
-    DOWN
+    UP
 }

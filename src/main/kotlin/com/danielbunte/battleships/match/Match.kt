@@ -6,8 +6,8 @@ import com.danielbunte.battleships.io.Subscriber
 import com.danielbunte.battleships.match.io.AttackResultConverter
 
 class Match(
-    private val hitCalculator: HitCalculator,
-    private val turnCoordinator: TurnCoordinator,
+    private val hitCalculator: HitCalculator = HitCalculator(),
+    private val turnCoordinator: TurnCoordinator = TurnCoordinator(),
     private val attackResultConverter: AttackResultConverter = AttackResultConverter()
 ) {
 
@@ -79,7 +79,7 @@ class Match(
 
     fun initGame(gameBoard: GameBoard, ships: List<Ship>) {
         players.forEach { player ->
-            player.init(gameBoard.copy(), ships.map { it.copy() })
+            player.init(gameBoard.copy(), ships.map { it.copy(cells = mutableListOf()) })
         }
 
         turnCoordinator.init(players)

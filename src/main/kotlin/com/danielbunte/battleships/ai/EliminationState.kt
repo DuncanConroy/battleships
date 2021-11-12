@@ -65,8 +65,9 @@ class EliminationState(
 
             coordinate = aiClient.blockCoordinate(self.gameBoard, newX, newY)
             if (coordinate.isEmpty()) {
-                lastHit = previousHit.ifEmpty {
-                    previousState.lastAttempt
+                if (previousHit.isNotEmpty()) {
+                    lastHit = previousState.lastAttempt
+                    attackFlow = rotateAttackFlow()
                 }
                 attackFlow = rotateAttackFlow()
             }

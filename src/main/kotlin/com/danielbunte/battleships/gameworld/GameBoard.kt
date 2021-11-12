@@ -89,19 +89,19 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     fun getShipAt(coordinates: String): Ship? {
-        val xy = convertCoordinates(coordinates)
-        return cells[xy.first][xy.second].ship
+        val (x, y) = convertCoordinates(coordinates)
+        return cells[x][y].ship
     }
 
     fun copy() = GameBoard(width, height)
 
     fun updateCellState(coordinates: String, state: HitResult) {
-        val xy = convertCoordinates(coordinates)
+        val (x, y) = convertCoordinates(coordinates)
         when (state) {
-            HitResult.HIT -> cells[xy.first][xy.second].state = CellState.HIT
-            HitResult.MISS -> cells[xy.first][xy.second].state = CellState.MISS
+            HitResult.HIT -> cells[x][y].state = CellState.HIT
+            HitResult.MISS -> cells[x][y].state = CellState.MISS
             HitResult.DESTROYED -> {
-                val cell = cells[xy.first][xy.second]
+                val cell = cells[x][y]
                 if (cell.ship?.health == 0) {
                     cell.ship.cells.forEach {
                         cells[it.first][it.second].state = CellState.DESTROYED
@@ -114,8 +114,8 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     fun getCellState(coordinates: String): CellState {
-        val xy = convertCoordinates(coordinates)
-        return cells[xy.first][xy.second].state
+        val (x, y) = convertCoordinates(coordinates)
+        return cells[x][y].state
     }
 
     fun getBoardView() = cells.map { columns ->

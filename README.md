@@ -5,7 +5,7 @@ A simulation of the famous battleship board game
 ## Architecture
 
 Every software project should start with some thinking. So did this.
-[Review the architecture](https://miro.com/app/board/o9J_llIX690=/?invite_link_id=116517360909)
+[Review the architecture](https://miro.com/app/board/o9J_llIX690=/?moveToWidget=3074457367097787654&cot=14)
 
 ## A quick intro to the Kotlin syntax
 
